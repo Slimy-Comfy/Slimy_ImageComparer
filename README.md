@@ -26,6 +26,7 @@ git clone https://github.com/Slimy-Comfy/Slimy_ImageComparer
 2. **Slimy_ImageComparer** を追加
 3. `image_A` と `image_B` に比較したい画像を接続
 4. ノード上部のボタンでモードを切り替え
+5. 表示されている画像を保存したい場合は、画像を右クリックで「画像Aをコピー/画像Aを保存/画像Aを開く」といったメニューが利用できます
 
 | モード | 動作 |
 |--------|------|
