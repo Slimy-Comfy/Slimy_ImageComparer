@@ -360,5 +360,69 @@ app.registerExtension({
             requestAnimationFrame(checkUp);
             return false;
         };
+
+        nodeType.prototype.getExtraMenuOptions = function (_, options) {
+            const s = this._slimy;
+            if (!s) return;
+
+            const mode = this.properties?.["comparer_mode"] || DEFAULT_MODE;
+
+            const copyImageToClipboard = async (img) => {
+                try {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    canvas.getContext("2d").drawImage(img, 0, 0);
+                    canvas.toBlob(async (blob) => {
+                        try {
+                            await navigator.clipboard.write([
+                                new ClipboardItem({ "image/png": blob })
+                            ]);
+                        } catch (e) {
+                            alert("クリップボードへのコピーに失敗しました: " + e.message);
+                        }
+                    }, "image/png");
+                } catch (e) {
+                    alert("画像の取得に失敗しました: " + e.message);
+                }
+            };
+
+            const saveImage = (img, label) => {
+                const a = document.createElement("a");
+                a.href = img.src;
+                a.download = `compare_${label}.png`;
+                a.click();
+            };
+
+            const makeItems = (img, label) => [
+                {
+                    content: `画像${label}を新しいタブで開く`,
+                    callback: () => { window.open(img.src, "_blank"); },
+                },
+                {
+                    content: `画像${label}をコピー`,
+                    callback: () => { copyImageToClipboard(img); },
+                },
+                {
+                    content: `画像${label}を保存`,
+                    callback: () => { saveImage(img, label.toLowerCase()); },
+                },
+            ];
+
+            const menuItems = [];
+
+            if (mode === "A" && s.imgA) {
+                menuItems.push(...makeItems(s.imgA, "A"));
+            } else if (mode === "B" && s.imgB) {
+                menuItems.push(...makeItems(s.imgB, "B"));
+            } else {
+                if (s.imgA) menuItems.push(...makeItems(s.imgA, "A"));
+                if (s.imgB) menuItems.push(...makeItems(s.imgB, "B"));
+            }
+
+            if (menuItems.length > 0) {
+                options.push(...menuItems);
+            }
+        };
     },
 });
