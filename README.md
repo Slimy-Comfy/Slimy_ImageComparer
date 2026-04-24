@@ -3,6 +3,7 @@
 A/B画像をインタラクティブに比較できる ComfyUI カスタムノードです。
 rgthree氏のコードを参考に改良を加えたものです
 (https://github.com/rgthree/rgthree-comfy)
+
 ![](Slimy_Comparer.jpg)
 
 ## 機能
